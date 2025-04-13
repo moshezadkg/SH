@@ -141,58 +141,77 @@
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h5>פרטי ההודעה</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="title" class="form-label">כותרת</label>
-                            <input type="text" class="form-control" id="title" value="">
-                        </div>
-                        <div class="mb-3">
-                            <label for="subtitle" class="form-label">תת כותרת</label>
-                            <input type="text" class="form-control" id="subtitle" value="למסירה:">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">פריטים למסירה</label>
-                            <div class="input-group mb-2">
-                                <input type="text" id="newItem" class="form-control" placeholder="תיאור הפריט">
-                                <button class="btn btn-success" id="addItem"><i class="bi bi-plus-lg"></i> הוסף</button>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>פרטי ההודעה</h5>
                             </div>
-                            <ul class="item-list" id="itemsList"></ul>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">כותרת</label>
+                                    <input type="text" class="form-control" id="title" value="">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="subtitle" class="form-label">תת כותרת</label>
+                                    <input type="text" class="form-control" id="subtitle" value="למסירה:">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">פריטים למסירה</label>
+                                    <div class="input-group mb-2">
+                                        <input type="text" id="newItem" class="form-control" placeholder="תיאור הפריט">
+                                        <button class="btn btn-success" id="addItem"><i class="bi bi-plus-lg"></i> הוסף</button>
+                                    </div>
+                                    <ul class="item-list" id="itemsList"></ul>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="location" class="form-label">מיקום האיסוף</label>
+                                    <input type="text" class="form-control" id="location" value="">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">מספר טלפון</label>
+                                    <input type="tel" class="form-control" id="phone" value="">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">כתובת מייל</label>
+                                    <input type="email" class="form-control" id="email" value="">
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="location" class="form-label">מיקום האיסוף</label>
-                            <input type="text" class="form-control" id="location" value="">
-                        </div>
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">מספר טלפון</label>
-                            <input type="tel" class="form-control" id="phone" value="">
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">כתובת מייל</label>
-                            <input type="email" class="form-control" id="email" value="">
-                        </div>
-                    </div>
-                </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h5>תמונות</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="formFileMultiple" class="form-label">בחר תמונות להעלאה</label>
-                            <input class="form-control" type="file" id="formFileMultiple" multiple accept="image/*">
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <h5>תמונות</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="formFileMultiple" class="form-label">בחר תמונות להעלאה</label>
+                                    <input class="form-control" type="file" id="formFileMultiple" multiple accept="image/*">
+                                </div>
+                                <div class="image-preview" id="imagePreview"></div>
+                            </div>
                         </div>
-                        <div class="image-preview" id="imagePreview"></div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card sticky-top" style="top: 20px; max-height: calc(100vh - 40px); overflow-y: auto;">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5>תצוגה מקדימה חיה</h5>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="refreshPreview()">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="preview-container" id="quickPreview">
+                                    <!-- תוכן התצוגה המקדימה יתמלא על ידי JavaScript -->
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
                     <button class="btn btn-primary" id="btnPreview" onclick="showPreviewTab()">
-                        <i class="bi bi-eye"></i> תצוגה מקדימה
+                        <i class="bi bi-eye"></i> תצוגה מקדימה מלאה
                     </button>
                 </div>
             </div>
@@ -288,12 +307,40 @@
                                 <option value="orange">כתום</option>
                             </select>
                         </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="autoSave" checked>
+                            <label class="form-check-label" for="autoSave">שמירה אוטומטית של נתונים</label>
+                        </div>
                         <button class="btn btn-primary" id="saveSettings" onclick="saveSettings()">
                             <i class="bi bi-save"></i> שמור הגדרות
                         </button>
-                        <button class="btn btn-danger mt-4" id="clearAll" onclick="clearAllData()">
-                            <i class="bi bi-trash"></i> מחק את כל הנתונים
-                        </button>
+                        
+                        <hr>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">יבוא ויצוא נתונים</label>
+                                    <p class="small">ייצוא נתונים וייבוא במחשבים אחרים או בהתקנה חדשה</p>
+                                    <button class="btn btn-outline-secondary" onclick="exportData()">
+                                        <i class="bi bi-download"></i> ייצוא נתונים
+                                    </button>
+                                    <input type="file" id="importDataFile" class="d-none" accept=".json" onchange="importData(this)">
+                                    <button class="btn btn-outline-secondary ms-2" onclick="document.getElementById('importDataFile').click()">
+                                        <i class="bi bi-upload"></i> ייבוא נתונים
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">ניקוי נתונים</label>
+                                    <p class="small">מחיקת פריטים והגדרות מהמערכת</p>
+                                    <button class="btn btn-danger" id="clearAll" onclick="clearAllData()">
+                                        <i class="bi bi-trash"></i> מחק את כל הנתונים
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -309,6 +356,97 @@
         let uploadedImages = [];
         let pdfBlob = null;
         let logoImage = null;
+        
+        // טעינת הגדרות ונתונים
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSettings();
+            loadSavedData();
+            applyColorTheme();
+            
+            // מאזינים לשינויים בשדות הטקסט לעדכון תצוגה מקדימה
+            const textInputs = document.querySelectorAll('input[type="text"], input[type="tel"], input[type="email"], textarea:not(#importText)');
+            textInputs.forEach(input => {
+                input.addEventListener('input', debounce(function() {
+                    refreshPreview();
+                    if (document.getElementById('autoSave').checked) {
+                        saveCurrentData();
+                    }
+                }, 500));
+            });
+            
+            // רענון תצוגה מקדימה בעת טעינת הדף
+            refreshPreview();
+        });
+        
+        // פונקציית דיבאונס למניעת עומס
+        function debounce(func, wait) {
+            let timeout;
+            return function() {
+                const context = this, args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    func.apply(context, args);
+                }, wait);
+            };
+        }
+        
+        // רענון תצוגה מקדימה חיה
+        function refreshPreview() {
+            generateQuickPreview();
+        }
+        
+        // יצירת תצוגה מקדימה חיה
+        function generateQuickPreview() {
+            const title = document.getElementById('title').value || 'כותרת';
+            const subtitle = document.getElementById('subtitle').value || 'תת כותרת';
+            const location = document.getElementById('location').value || 'מיקום';
+            const phone = document.getElementById('phone').value || 'טלפון';
+            const email = document.getElementById('email').value || 'דוא"ל';
+            
+            let logoHtml = '';
+            if (logoImage) {
+                logoHtml = `<div style="text-align: center; margin-bottom: 15px;">
+                    <img src="${logoImage}" style="max-width: 200px; max-height: 100px;">
+                </div>`;
+            }
+            
+            let itemsHtml = '';
+            if (items.length > 0) {
+                itemsHtml = '<ul style="list-style-type: disc;">';
+                items.forEach(item => {
+                    itemsHtml += `<li><strong>${item}</strong></li>`;
+                });
+                itemsHtml += '</ul>';
+            } else {
+                itemsHtml = '<p>אין פריטים למסירה</p>';
+            }
+            
+            let imagesHtml = '';
+            if (uploadedImages.length > 0) {
+                imagesHtml = '<p><strong>מצ"ב תמונות</strong></p><div style="display: flex; flex-wrap: wrap; gap: 10px;">';
+                uploadedImages.forEach(img => {
+                    imagesHtml += `<img src="${img.dataUrl || img}" style="max-width: 200px; max-height: 200px; border-radius: 5px;">`;
+                });
+                imagesHtml += '</div>';
+            }
+            
+            const previewHtml = `
+                <div style="font-family: Arial, sans-serif; line-height: 1.6; font-size: 0.9em;">
+                    ${logoHtml}
+                    <p><strong>${title}</strong></p>
+                    <p><strong>${subtitle}</strong></p>
+                    ${itemsHtml}
+                    ${imagesHtml}
+                    <p>כל הקודם זוכה</p>
+                    <p>מיקום האיסוף: ${location}.</p>
+                    <p>לפרטים:</p>
+                    <p>פלאפון: <strong>${phone}</strong></p>
+                    <p>מייל: <strong>${email}</strong></p>
+                </div>
+            `;
+            
+            document.getElementById('quickPreview').innerHTML = previewHtml;
+        }
 
         // ניתוח טקסט מיובא
         function parseImportedText() {
@@ -333,51 +471,94 @@
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i];
                 
-                if (line.includes('למסירה') && !foundItems) {
+                if ((line.includes('למסירה') || line.includes('מסירה:')) && !foundItems) {
                     foundItems = true;
+                    // אם יש מידע אחרי "למסירה", נשמור אותו כפריט
+                    const itemPart = line.split('למסירה').pop();
+                    if (itemPart && itemPart.trim() && itemPart.trim() !== ':') {
+                        itemsText.push(itemPart.trim());
+                    }
                     continue;
                 }
                 
-                if (line.includes('מיקום האיסוף') || line.includes('מיקום איסוף')) {
+                if ((line.includes('מיקום האיסוף') || line.includes('מיקום איסוף') || line.includes('האיסוף:')) && !foundLocation) {
                     foundLocation = true;
                     
                     // חילוץ מיקום האיסוף
-                    const locationMatch = line.match(/(?:מיקום האיסוף|מיקום איסוף):\s*(.+)\./);
+                    const locationMatch = line.match(/(?:מיקום האיסוף|מיקום איסוף|האיסוף):\s*([^.]+)/);
                     if (locationMatch && locationMatch[1]) {
                         document.getElementById('location').value = locationMatch[1].trim();
                     }
-                    break;
+                    continue;
                 }
                 
-                if (foundItems && !foundLocation && !line.includes('מצ"ב תמונ')) {
+                if (foundItems && !foundLocation) {
+                    // בדיקה אם יש טקסט "מצ"ב תמונות" או דומה
+                    if (line.includes('מצ"ב תמונ') || line.includes('מצורפ') || line.includes('תמונה מצורפת')) {
+                        continue;
+                    }
+                    
+                    // אם זו שורה ריקה, נדלג עליה
+                    if (!line.trim()) {
+                        continue;
+                    }
+                    
                     itemsText.push(line);
+                }
+                
+                // חיפוש טלפון
+                if (line.includes('טלפון:') || line.includes('פלאפון:') || line.includes('נייד:')) {
+                    const phoneMatch = line.match(/(?:טלפון|פלאפון|נייד):\s*(\d+)/);
+                    if (phoneMatch && phoneMatch[1]) {
+                        document.getElementById('phone').value = phoneMatch[1].trim();
+                    }
+                }
+                
+                // חיפוש מייל
+                if (line.includes('מייל:') || line.includes('אימייל:') || line.includes('דוא"ל:')) {
+                    const emailMatch = line.match(/(?:מייל|אימייל|דוא"ל):\s*([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
+                    if (emailMatch && emailMatch[1]) {
+                        document.getElementById('email').value = emailMatch[1].trim();
+                    }
+                }
+            }
+            
+            // אם לא מצאנו טלפון או מייל בשורות נפרדות, נחפש בכל הטקסט
+            if (!document.getElementById('phone').value) {
+                const phoneMatch = text.match(/(?:טלפון|פלאפון|נייד):\s*(\d+)/);
+                if (phoneMatch && phoneMatch[1]) {
+                    document.getElementById('phone').value = phoneMatch[1].trim();
+                }
+            }
+            
+            if (!document.getElementById('email').value) {
+                const emailMatch = text.match(/(?:מייל|אימייל|דוא"ל):\s*([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
+                if (emailMatch && emailMatch[1]) {
+                    document.getElementById('email').value = emailMatch[1].trim();
                 }
             }
             
             // מילוי פריטים
             items = [];
             itemsText.forEach(item => {
-                if (item.startsWith('*')) {
-                    items.push(item.substring(1).trim());
-                } else if (item.startsWith('-')) {
-                    items.push(item.substring(1).trim());
-                } else {
-                    items.push(item);
+                let processedItem = item;
+                // הסרת כוכביות, מקפים או תווים אחרים בתחילת השורה
+                if (processedItem.startsWith('*')) {
+                    processedItem = processedItem.substring(1).trim();
+                } else if (processedItem.startsWith('-')) {
+                    processedItem = processedItem.substring(1).trim();
+                } else if (processedItem.startsWith('•')) {
+                    processedItem = processedItem.substring(1).trim();
+                }
+                
+                if (processedItem) {
+                    items.push(processedItem);
                 }
             });
             renderItems();
             
-            // חיפוש טלפון
-            const phoneMatch = text.match(/(?:טלפון|פלאפון):\s*(\d+)/);
-            if (phoneMatch && phoneMatch[1]) {
-                document.getElementById('phone').value = phoneMatch[1].trim();
-            }
-            
-            // חיפוש מייל
-            const emailMatch = text.match(/(?:מייל|אימייל):\s*([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
-            if (emailMatch && emailMatch[1]) {
-                document.getElementById('email').value = emailMatch[1].trim();
-            }
+            // הוספת תצוגה מקדימה מהירה
+            generatePreview();
             
             alert('הטקסט נותח והשדות מולאו בהצלחה!');
         }
@@ -394,6 +575,12 @@
                 items.push(newItem);
                 renderItems();
                 document.getElementById('newItem').value = '';
+                refreshPreview();
+                
+                // שמירה אוטומטית
+                if (document.getElementById('autoSave').checked) {
+                    saveCurrentData();
+                }
             }
         });
 
@@ -432,6 +619,12 @@
             if (newText !== null) {
                 items[index] = newText;
                 renderItems();
+                refreshPreview();
+                
+                // שמירה אוטומטית
+                if (document.getElementById('autoSave').checked) {
+                    saveCurrentData();
+                }
             }
         }
 
@@ -440,6 +633,12 @@
             if (confirm('האם אתה בטוח שברצונך למחוק פריט זה?')) {
                 items.splice(index, 1);
                 renderItems();
+                refreshPreview();
+                
+                // שמירה אוטומטית
+                if (document.getElementById('autoSave').checked) {
+                    saveCurrentData();
+                }
             }
         }
 
@@ -454,7 +653,16 @@
                     const reader = new FileReader();
                     
                     reader.onload = function(e) {
-                        uploadedImages.push(e.target.result);
+                        // הכן אובייקט עם מידע על התמונה אבל בלי לשמור את כל התוכן ב-localStorage
+                        const imageObj = {
+                            name: file.name,
+                            type: file.type,
+                            size: file.size,
+                            lastModified: file.lastModified,
+                            dataUrl: e.target.result // נשתמש בזה להצגה, אבל לא נשמור אותו ב-localStorage
+                        };
+                        
+                        uploadedImages.push(imageObj);
                         
                         const img = document.createElement('img');
                         img.src = e.target.result;
@@ -464,19 +672,38 @@
                         imgContainer.className = 'position-relative';
                         imgContainer.appendChild(img);
                         
+                        // הוסף את שם הקובץ
+                        const nameLabel = document.createElement('div');
+                        nameLabel.className = 'text-center mt-1 small text-muted';
+                        nameLabel.textContent = file.name.length > 20 ? file.name.substr(0, 17) + '...' : file.name;
+                        imgContainer.appendChild(nameLabel);
+                        
                         const removeBtn = document.createElement('button');
                         removeBtn.className = 'btn btn-sm btn-danger position-absolute top-0 end-0 m-1';
                         removeBtn.innerHTML = '<i class="bi bi-x"></i>';
                         removeBtn.onclick = function() {
-                            const index = uploadedImages.indexOf(e.target.result);
+                            const index = uploadedImages.findIndex(img => img.name === file.name && img.lastModified === file.lastModified);
                             if (index > -1) {
                                 uploadedImages.splice(index, 1);
                                 imgContainer.remove();
+                                refreshPreview();
+                                
+                                // שמירה אוטומטית
+                                if (document.getElementById('autoSave').checked) {
+                                    saveCurrentData();
+                                }
                             }
                         };
                         
                         imgContainer.appendChild(removeBtn);
                         imagePreview.appendChild(imgContainer);
+                        
+                        refreshPreview();
+                        
+                        // שמירה אוטומטית
+                        if (document.getElementById('autoSave').checked) {
+                            saveCurrentData();
+                        }
                     };
                     
                     reader.readAsDataURL(file);
@@ -535,7 +762,7 @@
             let logoHtml = '';
             if (logoImage) {
                 logoHtml = `<div style="text-align: center; margin-bottom: 15px;">
-                    <img src="${logoImage}" style="max-width: 200px; max-height: 100px;">
+                    <img src="${logoImage}" style="max-width: 300px; max-height: 150px;">
                 </div>`;
             }
             
@@ -550,9 +777,9 @@
             
             let imagesHtml = '';
             if (uploadedImages.length > 0) {
-                imagesHtml = '<p><strong>מצ"ב תמונות</strong></p><div style="display: flex; flex-wrap: wrap; gap: 10px;">';
+                imagesHtml = '<p><strong>מצ"ב תמונות</strong></p><div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">';
                 uploadedImages.forEach(img => {
-                    imagesHtml += `<img src="${img}" style="max-width: 200px; max-height: 200px; border-radius: 5px;">`;
+                    imagesHtml += `<img src="${img.dataUrl || img}" style="max-width: 450px; max-height: 450px; border-radius: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3);">`;
                 });
                 imagesHtml += '</div>';
             }
@@ -630,9 +857,116 @@
             }
         }
 
-        // שמירת הגדרות
+        // טיפול בשינוי ערכת צבעים
+        document.getElementById('colorTheme').addEventListener('change', function() {
+            applyColorTheme();
+            saveSettings();
+        });
+        
+        // החלת ערכת צבעים על הממשק
+        function applyColorTheme() {
+            const theme = document.getElementById('colorTheme').value;
+            const header = document.querySelector('.header');
+            const buttons = document.querySelectorAll('.btn-primary');
+            
+            // איפוס סגנונות קודמים
+            header.style.background = '';
+            buttons.forEach(btn => {
+                btn.style.backgroundColor = '';
+                btn.style.borderColor = '';
+            });
+            
+            // החלת ערכת הצבעים החדשה
+            switch (theme) {
+                case 'green':
+                    header.style.background = 'linear-gradient(45deg, #27ae60, #2ecc71)';
+                    buttons.forEach(btn => {
+                        btn.style.backgroundColor = '#27ae60';
+                        btn.style.borderColor = '#27ae60';
+                    });
+                    break;
+                case 'purple':
+                    header.style.background = 'linear-gradient(45deg, #8e44ad, #9b59b6)';
+                    buttons.forEach(btn => {
+                        btn.style.backgroundColor = '#8e44ad';
+                        btn.style.borderColor = '#8e44ad';
+                    });
+                    break;
+                case 'orange':
+                    header.style.background = 'linear-gradient(45deg, #d35400, #e67e22)';
+                    buttons.forEach(btn => {
+                        btn.style.backgroundColor = '#d35400';
+                        btn.style.borderColor = '#d35400';
+                    });
+                    break;
+                // ברירת מחדל - כחול
+                default:
+                    header.style.background = 'linear-gradient(45deg, #3498db, #2980b9)';
+                    buttons.forEach(btn => {
+                        btn.style.backgroundColor = '#3498db';
+                        btn.style.borderColor = '#3498db';
+                    });
+            }
+        }
+        
+        // שמירת הגדרות בלוקל סטורג'
         function saveSettings() {
-            alert('ההגדרות נשמרו בהצלחה!');
+            const settings = {
+                colorTheme: document.getElementById('colorTheme').value,
+                footerText: document.getElementById('footerText').value,
+                includeUnsubscribe: document.getElementById('includeUnsubscribe').checked,
+                unsubscribeEmail: document.getElementById('unsubscribeEmail').value,
+                logo: logoImage
+            };
+            
+            try {
+                localStorage.setItem('gmachSettings', JSON.stringify(settings));
+                alert('ההגדרות נשמרו בהצלחה!');
+            } catch (e) {
+                console.error('שגיאה בשמירת ההגדרות:', e);
+                alert('אירעה שגיאה בשמירת ההגדרות');
+            }
+        }
+        
+        // טעינת הגדרות מלוקל סטורג'
+        function loadSettings() {
+            try {
+                const savedSettings = localStorage.getItem('gmachSettings');
+                if (savedSettings) {
+                    const settings = JSON.parse(savedSettings);
+                    
+                    // החלת ההגדרות
+                    document.getElementById('colorTheme').value = settings.colorTheme || 'blue';
+                    document.getElementById('footerText').value = settings.footerText || '';
+                    document.getElementById('includeUnsubscribe').checked = settings.includeUnsubscribe !== false;
+                    document.getElementById('unsubscribeEmail').value = settings.unsubscribeEmail || '';
+                    
+                    // טעינת לוגו אם יש
+                    if (settings.logo) {
+                        logoImage = settings.logo;
+                        const logoPreview = document.getElementById('logoPreview');
+                        logoPreview.innerHTML = '';
+                        
+                        const img = document.createElement('img');
+                        img.src = settings.logo;
+                        img.className = 'logo-preview';
+                        
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'btn btn-sm btn-outline-danger d-block mt-2';
+                        removeBtn.innerHTML = '<i class="bi bi-trash"></i> הסר לוגו';
+                        removeBtn.onclick = function() {
+                            logoImage = null;
+                            logoPreview.innerHTML = '';
+                            document.getElementById('logoUpload').value = '';
+                        };
+                        
+                        logoPreview.appendChild(img);
+                        logoPreview.appendChild(removeBtn);
+                    }
+                }
+            } catch (e) {
+                console.error('שגיאה בטעינת ההגדרות:', e);
+            }
         }
 
         // מחיקת כל הנתונים
@@ -640,6 +974,7 @@
             if (confirm('האם אתה בטוח שברצונך למחוק את כל הנתונים?')) {
                 // ניקוי שדות הטקסט
                 document.getElementById('title').value = '';
+                document.getElementById('subtitle').value = 'למסירה:';
                 document.getElementById('location').value = '';
                 document.getElementById('phone').value = '';
                 document.getElementById('email').value = '';
@@ -655,8 +990,291 @@
                 document.getElementById('imagePreview').innerHTML = '';
                 document.getElementById('formFileMultiple').value = '';
                 
+                // ניקוי נתונים שמורים
+                localStorage.removeItem('gmachCurrentData');
+                
+                // רענון תצוגה מקדימה
+                refreshPreview();
+                
                 alert('כל הנתונים נמחקו בהצלחה!');
             }
+        }
+
+        // שמירת נתונים נוכחיים (לא הגדרות)
+        function saveCurrentData() {
+            try {
+                // שמירת מידע בסיסי
+                const basicData = {
+                    title: document.getElementById('title').value,
+                    subtitle: document.getElementById('subtitle').value,
+                    items: items,
+                    location: document.getElementById('location').value,
+                    phone: document.getElementById('phone').value,
+                    email: document.getElementById('email').value,
+                };
+                
+                // שמירת מידע על התמונות (ללא ה-dataUrl)
+                const imagesMetadata = uploadedImages.map(img => {
+                    if (typeof img === 'string') {
+                        return { legacy: true, dataUrl: img }; // תמיכה בפורמט ישן
+                    }
+                    
+                    // שמירת המטא-דאטה בלבד ללא התוכן
+                    return {
+                        name: img.name,
+                        type: img.type,
+                        size: img.size,
+                        lastModified: img.lastModified
+                    };
+                });
+                
+                basicData.uploadedImagesInfo = imagesMetadata;
+                
+                localStorage.setItem('gmachCurrentData', JSON.stringify(basicData));
+                console.log('נתונים בסיסיים נשמרו');
+            } catch (e) {
+                console.error('שגיאה בשמירת נתונים:', e);
+            }
+        }
+        
+        // טעינת נתונים שמורים
+        function loadSavedData() {
+            try {
+                const savedData = localStorage.getItem('gmachCurrentData');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    
+                    // טעינת נתונים
+                    document.getElementById('title').value = data.title || '';
+                    document.getElementById('subtitle').value = data.subtitle || 'למסירה:';
+                    items = data.items || [];
+                    document.getElementById('location').value = data.location || '';
+                    document.getElementById('phone').value = data.phone || '';
+                    document.getElementById('email').value = data.email || '';
+                    
+                    // לגבי התמונות - שומרים את המטא-דאטה, אבל צריך להעלות אותן שוב
+                    if (data.uploadedImagesInfo && data.uploadedImagesInfo.length > 0) {
+                        // אם יש תמונות ישנות שנשמרו כמחרוזות Base64
+                        if (data.uploadedImages && data.uploadedImages.length > 0) {
+                            uploadedImages = data.uploadedImages.map(img => ({
+                                name: 'תמונה שמורה',
+                                type: 'image/jpeg',
+                                dataUrl: img
+                            }));
+                            
+                            showImagePlaceholders();
+                        } else {
+                            // הצג הודעה שצריך להעלות מחדש את התמונות
+                            const imagePreview = document.getElementById('imagePreview');
+                            if (data.uploadedImagesInfo.length > 0) {
+                                const msgElement = document.createElement('div');
+                                msgElement.className = 'alert alert-info';
+                                msgElement.innerHTML = 
+                                    `<i class="bi bi-info-circle"></i> נמצאו ${data.uploadedImagesInfo.length} תמונות בנתונים השמורים. 
+                                    <br>אנא העלה מחדש את התמונות כדי להשתמש בהן.`;
+                                imagePreview.appendChild(msgElement);
+                            }
+                        }
+                    }
+                    
+                    // עדכון רשימת הפריטים
+                    renderItems();
+                }
+            } catch (e) {
+                console.error('שגיאה בטעינת נתונים שמורים:', e);
+            }
+        }
+        
+        // הצג את התמונות השמורות
+        function showImagePlaceholders() {
+            const imagePreview = document.getElementById('imagePreview');
+            imagePreview.innerHTML = '';
+            
+            uploadedImages.forEach((imgData, index) => {
+                const img = document.createElement('img');
+                if (imgData.dataUrl) {
+                    img.src = imgData.dataUrl;
+                } else if (typeof imgData === 'string') {
+                    img.src = imgData;
+                }
+                
+                img.className = 'preview-image';
+                
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'position-relative';
+                imgContainer.appendChild(img);
+                
+                // הוסף את שם הקובץ אם יש
+                if (imgData.name) {
+                    const nameLabel = document.createElement('div');
+                    nameLabel.className = 'text-center mt-1 small text-muted';
+                    nameLabel.textContent = imgData.name.length > 20 ? imgData.name.substr(0, 17) + '...' : imgData.name;
+                    imgContainer.appendChild(nameLabel);
+                }
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'btn btn-sm btn-danger position-absolute top-0 end-0 m-1';
+                removeBtn.innerHTML = '<i class="bi bi-x"></i>';
+                removeBtn.onclick = function() {
+                    uploadedImages.splice(index, 1);
+                    imgContainer.remove();
+                    refreshPreview();
+                    
+                    // שמירה אוטומטית
+                    if (document.getElementById('autoSave').checked) {
+                        saveCurrentData();
+                    }
+                };
+                
+                imgContainer.appendChild(removeBtn);
+                imagePreview.appendChild(imgContainer);
+            });
+        }
+        
+        // ייצוא נתונים לקובץ JSON
+        function exportData() {
+            alert('מייצא נתונים כולל תמונות. זה עשוי לקחת זמן...');
+            
+            // איסוף כל הנתונים
+            const allData = {
+                settings: {
+                    colorTheme: document.getElementById('colorTheme').value,
+                    footerText: document.getElementById('footerText').value,
+                    includeUnsubscribe: document.getElementById('includeUnsubscribe').checked,
+                    unsubscribeEmail: document.getElementById('unsubscribeEmail').value,
+                    logo: logoImage,
+                    autoSave: document.getElementById('autoSave').checked
+                },
+                currentData: {
+                    title: document.getElementById('title').value,
+                    subtitle: document.getElementById('subtitle').value,
+                    items: items,
+                    location: document.getElementById('location').value,
+                    phone: document.getElementById('phone').value,
+                    email: document.getElementById('email').value,
+                    // כאן נשמור את התמונות המלאות כדי שאפשר יהיה לייבא אותן במחשב אחר
+                    uploadedImages: uploadedImages
+                }
+            };
+            
+            // המרה ל-JSON
+            const jsonData = JSON.stringify(allData, null, 2);
+            
+            // יצירת קובץ להורדה
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'גמח_מסירה_נתונים.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // ייבוא נתונים מקובץ JSON
+        function importData(input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    // ייבוא הגדרות
+                    if (data.settings) {
+                        document.getElementById('colorTheme').value = data.settings.colorTheme || 'blue';
+                        document.getElementById('footerText').value = data.settings.footerText || '';
+                        document.getElementById('includeUnsubscribe').checked = data.settings.includeUnsubscribe !== false;
+                        document.getElementById('unsubscribeEmail').value = data.settings.unsubscribeEmail || '';
+                        document.getElementById('autoSave').checked = data.settings.autoSave !== false;
+                        
+                        // טעינת לוגו
+                        if (data.settings.logo) {
+                            logoImage = data.settings.logo;
+                            const logoPreview = document.getElementById('logoPreview');
+                            logoPreview.innerHTML = '';
+                            
+                            const img = document.createElement('img');
+                            img.src = data.settings.logo;
+                            img.className = 'logo-preview';
+                            
+                            const removeBtn = document.createElement('button');
+                            removeBtn.className = 'btn btn-sm btn-outline-danger d-block mt-2';
+                            removeBtn.innerHTML = '<i class="bi bi-trash"></i> הסר לוגו';
+                            removeBtn.onclick = function() {
+                                logoImage = null;
+                                logoPreview.innerHTML = '';
+                                document.getElementById('logoUpload').value = '';
+                                saveSettings();
+                            };
+                            
+                            logoPreview.appendChild(img);
+                            logoPreview.appendChild(removeBtn);
+                        }
+                        
+                        // החלת ערכת צבעים
+                        applyColorTheme();
+                    }
+                    
+                    // ייבוא נתונים נוכחיים
+                    if (data.currentData) {
+                        document.getElementById('title').value = data.currentData.title || '';
+                        document.getElementById('subtitle').value = data.currentData.subtitle || 'למסירה:';
+                        items = data.currentData.items || [];
+                        document.getElementById('location').value = data.currentData.location || '';
+                        document.getElementById('phone').value = data.currentData.phone || '';
+                        document.getElementById('email').value = data.currentData.email || '';
+                        
+                        // טיפול בתמונות
+                        uploadedImages = [];
+                        const imagePreview = document.getElementById('imagePreview');
+                        imagePreview.innerHTML = '';
+                        
+                        if (data.currentData.uploadedImages && data.currentData.uploadedImages.length > 0) {
+                            // בדיקה מה סוג התמונות שיובאו
+                            data.currentData.uploadedImages.forEach(img => {
+                                // תמונות בפורמט החדש (אובייקטים עם dataUrl)
+                                if (typeof img === 'object' && img.dataUrl) {
+                                    uploadedImages.push(img);
+                                }
+                                // תמונות בפורמט הישן (מחרוזות base64)
+                                else if (typeof img === 'string') {
+                                    uploadedImages.push({
+                                        name: 'תמונה מיובאת',
+                                        type: 'image/jpeg',
+                                        dataUrl: img
+                                    });
+                                }
+                            });
+                            
+                            showImagePlaceholders(); // מציג את התמונות המיובאות
+                        }
+                        
+                        // עדכון רשימת הפריטים
+                        renderItems();
+                    }
+                    
+                    // שמירת הנתונים וההגדרות
+                    saveSettings();
+                    saveCurrentData();
+                    
+                    // רענון תצוגה מקדימה
+                    refreshPreview();
+                    
+                    alert('הנתונים יובאו בהצלחה!');
+                } catch (e) {
+                    console.error('שגיאה בייבוא נתונים:', e);
+                    alert('אירעה שגיאה בייבוא הנתונים. אנא ודא שהקובץ תקין.');
+                }
+                
+                // איפוס שדה הקובץ
+                input.value = '';
+            };
+            
+            reader.readAsText(file);
         }
     </script>
 </body>
