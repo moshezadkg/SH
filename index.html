@@ -851,6 +851,85 @@
             background: var(--danger);
             color: white;
         }
+
+        .settings-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .settings-section h3 {
+            color: #4a6da7;
+            margin: 0 0 20px 0;
+            font-size: 18px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+
+        .form-input:focus {
+            border-color: #4a6da7;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(74, 109, 167, 0.2);
+        }
+
+        .logo-upload {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+
+        .logo-upload:hover {
+            border-color: #4a6da7;
+            background: #f8f9fa;
+        }
+
+        .form-hint {
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #666;
+        }
+
+        .tab:hover {
+            color: #4a6da7;
+        }
+
+        .tab.active {
+            color: #4a6da7;
+            border-bottom-color: #4a6da7;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -1271,74 +1350,99 @@
             </div>
             <div class="modal-body">
                 <div class="tabs">
-                    <div class="tab active" onclick="switchSettingsTab('contact')">פרטי קשר</div>
+                    <div class="tab active" onclick="switchSettingsTab('general')">פרטי קשר</div>
                     <div class="tab" onclick="switchSettingsTab('email')">תבנית מייל</div>
                     <div class="tab" onclick="switchSettingsTab('export')">ייצוא</div>
                 </div>
                 
-                <div id="contactSettings" class="tab-content active">
-                    <h3>פרטי קשר ברירת מחדל</h3>
-                    <div class="form-group">
-                        <label>טלפון ראשי</label>
-                        <input type="text" id="settings-phone1" placeholder="מספר טלפון ראשי">
-                    </div>
-                    <div class="form-group">
-                        <label>טלפון משני</label>
-                        <input type="text" id="settings-phone2" placeholder="מספר טלפון משני">
-                    </div>
-                    <div class="form-group">
-                        <label>כתובת מייל</label>
-                        <input type="email" id="settings-email" placeholder="כתובת מייל ליצירת קשר">
-                    </div>
-                    <div class="form-group">
-                        <label>מיקום איסוף</label>
-                        <input type="text" id="settings-location" placeholder="עיר/שכונה">
+                <!-- הגדרות כלליות -->
+                <div id="generalSettings" class="tab-content active">
+                    <div class="settings-section">
+                        <h3>פרטי קשר ברירת מחדל</h3>
+                        <div class="form-group">
+                            <label>כותרת המייל</label>
+                            <input type="text" id="settings-title" placeholder="למשל: פריטים חדשים למסירה" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label>מיקום איסוף</label>
+                            <input type="text" id="settings-location" placeholder="עיר, שכונה" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label>טלפון ראשי</label>
+                            <input type="tel" id="settings-phone1" placeholder="מספר טלפון ראשי" class="form-input" dir="ltr">
+                        </div>
+                        <div class="form-group">
+                            <label>טלפון משני (אופציונלי)</label>
+                            <input type="tel" id="settings-phone2" placeholder="מספר טלפון נוסף" class="form-input" dir="ltr">
+                        </div>
+                        <div class="form-group">
+                            <label>כתובת מייל</label>
+                            <input type="email" id="settings-email" placeholder="כתובת מייל ליצירת קשר" class="form-input" dir="ltr">
+                        </div>
+                        <div class="form-group">
+                            <label>לוגו הגמ"ח</label>
+                            <div class="logo-upload">
+                                <img id="logo-preview" src="" style="max-height: 100px; display: none; margin-bottom: 10px;">
+                                <input type="file" id="settings-logo" accept="image/*" onchange="previewLogo(this)" class="file-input">
+                                <button class="btn btn-secondary" onclick="document.getElementById('settings-logo').click()">
+                                    <i class="fas fa-upload"></i> העלאת לוגו
+                                </button>
+                                <button id="remove-logo" class="btn btn-danger" onclick="removeLogo()" style="display: none;">
+                                    <i class="fas fa-trash"></i> הסר לוגו
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
+                <!-- הגדרות מייל -->
                 <div id="emailSettings" class="tab-content">
-                    <h3>תבנית מייל</h3>
-                    <div class="form-group">
-                        <label>כותרת המייל</label>
-                        <input type="text" id="settings-email-subject" placeholder="למשל: למסירה - פריטים חדשים">
-                    </div>
-                    <div class="form-group">
-                        <label>פתיח המייל</label>
-                        <textarea id="settings-email-intro" rows="3" placeholder="טקסט שיופיע בתחילת המייל"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>חתימה</label>
-                        <textarea id="settings-email-signature" rows="5" placeholder="טקסט שיופיע בסוף המייל"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>כתובת מייל לשליחה</label>
-                        <input type="email" id="settings-email-to" placeholder="כתובת המייל של קבוצת Google">
-                    </div>
-                    <div class="form-group">
-                        <label>סיסמת אפליקציה</label>
-                        <input type="password" id="settings-email-password" placeholder="סיסמת אפליקציה מ-Google">
-                        <small class="form-hint">נדרש לשליחת מיילים. <a href="https://support.google.com/accounts/answer/185833" target="_blank">איך ליצור סיסמת אפליקציה?</a></small>
+                    <div class="settings-section">
+                        <h3>תבנית מייל</h3>
+                        <div class="form-group">
+                            <label>פתיח המייל</label>
+                            <textarea id="settings-email-intro" rows="3" placeholder="טקסט שיופיע בתחילת המייל" class="form-input"></textarea>
+                            <small class="form-hint">למשל: שלום לכולם, להלן פריטים חדשים למסירה</small>
+                        </div>
+                        <div class="form-group">
+                            <label>חתימה</label>
+                            <textarea id="settings-email-signature" rows="4" placeholder="טקסט שיופיע בסוף המייל" class="form-input"></textarea>
+                            <small class="form-hint">למשל: בברכה, צוות הגמ"ח</small>
+                        </div>
+                        <div class="form-group">
+                            <label>כתובת מייל לשליחה</label>
+                            <input type="email" id="settings-email-to" placeholder="כתובת המייל של קבוצת Google" class="form-input" dir="ltr">
+                            <small class="form-hint">כתובת המייל אליה יישלחו העדכונים</small>
+                        </div>
+                        <div class="form-group">
+                            <label>סיסמת אפליקציה</label>
+                            <input type="password" id="settings-email-password" placeholder="סיסמת אפליקציה מ-Google" class="form-input" dir="ltr">
+                            <small class="form-hint">
+                                נדרש לשליחת מיילים. 
+                                <a href="https://support.google.com/accounts/answer/185833" target="_blank">
+                                    איך ליצור סיסמת אפליקציה?
+                                </a>
+                            </small>
+                        </div>
                     </div>
                 </div>
                 
+                <!-- הגדרות ייצוא -->
                 <div id="exportSettings" class="tab-content">
-                    <h3>הגדרות ייצוא</h3>
-                    <div class="form-group">
-                        <label>פורמט ייצוא מועדף</label>
-                        <select id="settings-export-format">
-                            <option value="pdf">PDF</option>
-                            <option value="txt">טקסט</option>
-                            <option value="both">שניהם</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>כותרת מסמך PDF</label>
-                        <input type="text" id="settings-pdf-title" placeholder="כותרת שתופיע במסמך ה-PDF">
-                    </div>
-                    <div class="form-group">
-                        <label>לוגו למסמך PDF</label>
-                        <input type="file" id="settings-pdf-logo" accept="image/*">
-                        <small class="form-hint">לוגו שיופיע בראש מסמך ה-PDF</small>
+                    <div class="settings-section">
+                        <h3>הגדרות ייצוא</h3>
+                        <div class="form-group">
+                            <label>פורמט ייצוא מועדף</label>
+                            <select id="settings-export-format" class="form-input">
+                                <option value="pdf">PDF</option>
+                                <option value="txt">טקסט</option>
+                                <option value="both">שניהם</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>כותרת מסמך PDF</label>
+                            <input type="text" id="settings-pdf-title" placeholder="כותרת שתופיע במסמך ה-PDF" class="form-input">
+                        </div>
                     </div>
                 </div>
                 
@@ -2272,11 +2376,12 @@
                 container.innerHTML += `
                     <div style="margin: 30px 0;">
                         <p style="margin: 0 0 15px 0; font-size: 16px;">מצ"ב תמונות</p>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px;">
+                        <div style="display: flex; flex-direction: column; gap: 30px;">
                             ${availableItems.map(item => `
                                 <div style="text-align: center;">
                                     <img src="data:image/jpeg;base64,${item.imagePath}" 
-                                         style="width: 100%; height: auto; max-height: 150px; object-fit: contain; border: 1px solid #eee; padding: 5px;">
+                                         style="width: 80%; max-width: 600px; min-height: 300px; object-fit: contain; border: 1px solid #eee; padding: 10px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                    <p style="margin: 10px 0 0 0; font-size: 14px; color: #666;">${item.description}</p>
                                 </div>
                             `).join('')}
                         </div>
@@ -2816,27 +2921,76 @@
         }
 
         function showSettings() {
+            // טעינת ההגדרות הקיימות
             const settings = JSON.parse(localStorage.getItem('settings') || '{}');
             
-            // טעינת ההגדרות הקיימות
-            document.getElementById('settings-phone1').value = settings.phone1 || '';
-            document.getElementById('settings-phone2').value = settings.phone2 || '';
-            document.getElementById('settings-email').value = settings.email || '';
-            document.getElementById('settings-location').value = settings.location || '';
-            document.getElementById('settings-email-subject').value = settings.emailSubject || '';
-            document.getElementById('settings-email-intro').value = settings.emailIntro || '';
-            document.getElementById('settings-email-signature').value = settings.emailSignature || '';
-            document.getElementById('settings-email-to').value = settings.emailTo || '';
-            document.getElementById('settings-email-password').value = settings.emailPassword || '';
-            document.getElementById('settings-export-format').value = settings.exportFormat || 'pdf';
-            document.getElementById('settings-pdf-title').value = settings.pdfTitle || '';
+            // פתיחת המודאל
+            const modal = document.getElementById('settingsModal');
+            if (!modal) return;
+            modal.style.display = 'block';
+
+            // מעבר לטאב הראשון
+            switchSettingsTab('general');
             
-            // הצגת המודאל
-            document.getElementById('settingsModal').style.display = 'block';
-            
-            // הצגת הטאב הראשון כברירת מחדל
-            switchSettingsTab('contact');
+            // טעינת ההגדרות לשדות
+            const elements = {
+                'settings-title': settings.title || '',
+                'settings-location': settings.location || '',
+                'settings-phone1': settings.phone1 || '',
+                'settings-phone2': settings.phone2 || '',
+                'settings-email': settings.email || '',
+                'settings-email-intro': settings.emailIntro || '',
+                'settings-email-signature': settings.emailSignature || '',
+                'settings-email-to': settings.emailTo || '',
+                'settings-email-password': settings.emailPassword || '',
+                'settings-export-format': settings.exportFormat || 'pdf',
+                'settings-pdf-title': settings.pdfTitle || ''
+            };
+
+            // מילוי השדות בצורה בטוחה
+            Object.entries(elements).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.value = value;
+                }
+            });
+
+            // טעינת הלוגו אם קיים
+            const logoPreview = document.getElementById('logo-preview');
+            const removeLogoBtn = document.getElementById('remove-logo');
+            if (logoPreview && removeLogoBtn) {
+                if (settings.logo) {
+                    logoPreview.src = settings.logo;
+                    logoPreview.style.display = 'block';
+                    removeLogoBtn.style.display = 'inline-block';
+                } else {
+                    logoPreview.style.display = 'none';
+                    removeLogoBtn.style.display = 'none';
+                }
+            }
         }
+
+        function closeSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // הוספת האזנה לטעינת הדף
+        document.addEventListener('DOMContentLoaded', function() {
+            // טעינת ההגדרות בעת טעינת הדף
+            const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+            
+            // הוספת מאזין לכפתור ההגדרות
+            const settingsButton = document.querySelector('button[onclick="showSettings()"]');
+            if (settingsButton) {
+                settingsButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showSettings();
+                });
+            }
+        });
 
         // הוספת פונקציה להעתקת טקסט
         function copyToClipboard(text) {
@@ -2921,6 +3075,101 @@
                 if (settings.email) contactDetails.push(`מייל: ${settings.email}`);
                 
                 document.getElementById('contact-details').value = contactDetails.join('\n');
+            }
+        }
+
+        function previewLogo(input) {
+            const preview = document.getElementById('logo-preview');
+            const removeBtn = document.getElementById('remove-logo');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    removeBtn.style.display = 'inline-block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function removeLogo() {
+            const preview = document.getElementById('logo-preview');
+            const input = document.getElementById('settings-logo');
+            const removeBtn = document.getElementById('remove-logo');
+            
+            preview.src = '';
+            preview.style.display = 'none';
+            input.value = '';
+            removeBtn.style.display = 'none';
+        }
+
+        function switchSettingsTab(tabName) {
+            // הסרת הקלאס active מכל הטאבים
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // הוספת הקלאס active לטאב הנבחר
+            document.querySelector(`.tab[onclick="switchSettingsTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}Settings`).classList.add('active');
+        }
+
+        function saveSettings() {
+            const settings = {
+                title: document.getElementById('settings-title').value,
+                location: document.getElementById('settings-location').value,
+                phone1: document.getElementById('settings-phone1').value,
+                phone2: document.getElementById('settings-phone2').value,
+                email: document.getElementById('settings-email').value,
+                emailIntro: document.getElementById('settings-email-intro').value,
+                emailSignature: document.getElementById('settings-email-signature').value,
+                emailTo: document.getElementById('settings-email-to').value,
+                emailPassword: document.getElementById('settings-email-password').value,
+                exportFormat: document.getElementById('settings-export-format').value,
+                pdfTitle: document.getElementById('settings-pdf-title').value,
+                logo: document.getElementById('logo-preview').src || null
+            };
+            
+            try {
+                localStorage.setItem('settings', JSON.stringify(settings));
+                showToast('ההגדרות נשמרו בהצלחה');
+                closeSettingsModal();
+            } catch (error) {
+                console.error('שגיאה בשמירת ההגדרות:', error);
+                showToast('שגיאה בשמירת ההגדרות', 'error');
+            }
+        }
+
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+            
+            // טעינת כל ההגדרות
+            document.getElementById('settings-title').value = settings.title || '';
+            document.getElementById('settings-location').value = settings.location || '';
+            document.getElementById('settings-phone1').value = settings.phone1 || '';
+            document.getElementById('settings-phone2').value = settings.phone2 || '';
+            document.getElementById('settings-email').value = settings.email || '';
+            document.getElementById('settings-email-intro').value = settings.emailIntro || '';
+            document.getElementById('settings-email-signature').value = settings.emailSignature || '';
+            document.getElementById('settings-email-to').value = settings.emailTo || '';
+            document.getElementById('settings-email-password').value = settings.emailPassword || '';
+            document.getElementById('settings-export-format').value = settings.exportFormat || 'pdf';
+            document.getElementById('settings-pdf-title').value = settings.pdfTitle || '';
+            
+            // טעינת הלוגו אם קיים
+            const logoPreview = document.getElementById('logo-preview');
+            const removeLogoBtn = document.getElementById('remove-logo');
+            if (settings.logo) {
+                logoPreview.src = settings.logo;
+                logoPreview.style.display = 'block';
+                removeLogoBtn.style.display = 'inline-block';
+            } else {
+                logoPreview.style.display = 'none';
+                removeLogoBtn.style.display = 'none';
             }
         }
     </script>
