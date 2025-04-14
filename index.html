@@ -280,15 +280,13 @@
                         </div>
                         <div class="mb-3">
                             <label for="footerText" class="form-label">טקסט קבוע לתחתית ההודעה</label>
-                            <textarea class="form-control" id="footerText" rows="5">
-כל הקודם זוכה
-לפרסום מוצרים למסירה או להוספת חברים לקבוצה יש לשלוח מייל ל: mesira89@gmail.com
+                            <textarea class="form-control" id="footerText" rows="5">לפרסום מוצרים למסירה או להוספת חברים לקבוצה יש לשלוח מייל ל: mesira89@gmail.com
 קישור ישיר להצטרפות מיידית לקבוצה: https://groups.google.com/g/mesira
 --
-בברכה
-קבוצת מסירה - לתת מכל הלב
+**בברכה**
+**קבוצת מסירה - לתת מכל הלב**
 
--- הקבוצה נפתחה לעילוי נשמת: "רותי בת מזל טוב" ו"רונן בן רותי" --- ‏</textarea>
+-- הקבוצה נפתחה לעילוי נשמת: "רותי בת מזל טוב" ו"רונן בן רותי" --- ‏קיבלת את ההודעה הזו מפני שאתה רשום לקבוצה 'למסירה - הכל בחינם' של קבוצות Google. כדי לבטל את הרישום לקבוצה הזו ולהפסיק לקבל ממנה אימייל, שלח אימייל אל mesira+unsubscribe@googlegroups.com. כדי לראות את הדיון הזה, צריך להיכנס אל https://groups.google.com/d/msgid/mesira/CAFYjNFyho1uG7OfBPv6Et1nRQanvzCFpig5R8uNdUKQvt67W1A%40mail.gmail.com.</textarea>
                         </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="includeUnsubscribe" checked>
@@ -402,6 +400,7 @@
             const location = document.getElementById('location').value || 'מיקום';
             const phone = document.getElementById('phone').value || 'טלפון';
             const email = document.getElementById('email').value || 'דוא"ל';
+            const footerText = document.getElementById('footerText').value || '';
             
             let logoHtml = '';
             if (logoImage) {
@@ -423,25 +422,144 @@
             
             let imagesHtml = '';
             if (uploadedImages.length > 0) {
-                imagesHtml = '<p><strong>מצ"ב תמונות</strong></p><div style="display: flex; flex-wrap: wrap; gap: 10px;">';
-                uploadedImages.forEach(img => {
-                    imagesHtml += `<img src="${img.dataUrl || img}" style="max-width: 200px; max-height: 200px; border-radius: 5px;">`;
+                imagesHtml = '<p style="margin: 3px 0 2px 0;"><strong>מצ"ב תמונות</strong></p>';
+                
+                if (uploadedImages.length === 1) {
+                    // תמונה אחת - הגדל משמעותית
+                    const maxHeight = footerText.length > 100 ? 520 : 580;
+                    imagesHtml += `<div style="text-align: center; margin-bottom: 5px;">
+                        <img src="${uploadedImages[0].dataUrl || uploadedImages[0]}" style="max-width: 650px; max-height: ${maxHeight}px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
+                    </div>`;
+                } else if (uploadedImages.length === 2) {
+                    // שתי תמונות - הגדל משמעותית
+                    const maxHeight = footerText.length > 100 ? 380 : 420;
+                    imagesHtml += '<div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 5px;">';
+                    uploadedImages.forEach(img => {
+                        imagesHtml += `<img src="${img.dataUrl || img}" style="max-width: 400px; max-height: ${maxHeight}px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">`;
+                    });
+                    imagesHtml += '</div>';
+                } else if (uploadedImages.length <= 3) {
+                    // 3 תמונות - הגדל משמעותית
+                    const maxHeight = footerText.length > 100 ? 300 : 350;
+                    imagesHtml += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-bottom: 5px;">';
+                    uploadedImages.forEach(img => {
+                        imagesHtml += `<div style="text-align: center;">
+                            <img src="${img.dataUrl || img}" style="max-width: 100%; max-height: ${maxHeight}px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
+                        </div>`;
+                    });
+                    imagesHtml += '</div>';
+                } else {
+                    // מעל 3 תמונות - הגבל לכמות קטנה יותר אבל בגודל משמעותי
+                    const maxHeight = footerText.length > 100 ? 220 : 250;
+                    imagesHtml += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; margin-bottom: 4px;">';
+                    // הגבל ל-6 תמונות בלבד
+                    const maxImagesToShow = Math.min(uploadedImages.length, 6);
+                    for (let i = 0; i < maxImagesToShow; i++) {
+                        const img = uploadedImages[i];
+                        imagesHtml += `<div style="text-align: center;">
+                            <img src="${img.dataUrl || img}" style="max-width: 100%; max-height: ${maxHeight}px; border-radius: 3px; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+                        </div>`;
+                    }
+                    imagesHtml += '</div>';
+                    
+                    // אם יש יותר תמונות, הודע למשתמש
+                    if (uploadedImages.length > 6) {
+                        imagesHtml += `<p style="text-align: center; font-size: 0.75em; margin: 2px 0;">+ ${uploadedImages.length - 6} תמונות נוספות</p>`;
+                    }
+                }
+            }
+            
+            // טקסט הפוטר - וודא שטקסט "בברכה" מופיע תמיד
+            let footerHtml = '';
+            if (footerText) {
+                // חילוק הטקסט לשורות
+                const footerLines = footerText.split('\n').filter(line => line.trim());
+                
+                // אתר את השורות החשובות
+                const bruchaIndex = footerLines.findIndex(line => line.includes('ברכה'));
+                const unsubscribeIndex = footerLines.findIndex(line => line.includes('לבטל את הרישום') || line.includes('unsubscribe'));
+                
+                // הגדר שורות חובה להצגה בהתאם למספר התמונות
+                let mandatoryLines = [];
+                
+                // הוסף את שורות הברכה תמיד (2-3 שורות)
+                if (bruchaIndex !== -1) {
+                    for (let i = bruchaIndex; i < bruchaIndex + 3 && i < footerLines.length; i++) {
+                        mandatoryLines.push(i);
+                    }
+                }
+                
+                // הוסף את שורת הסרת הרישום אם קיימת והמשתמש ביקש
+                if (unsubscribeIndex !== -1 && document.getElementById('includeUnsubscribe').checked) {
+                    mandatoryLines.push(unsubscribeIndex);
+                }
+                
+                // החלט על מספר השורות הנוספות להצגה
+                let additionalLines = uploadedImages.length > 3 ? 0 :
+                                      uploadedImages.length > 1 ? 1 : 
+                                      uploadedImages.length === 1 ? 2 : 4;
+                
+                // צור את רשימת כל האינדקסים להצגה
+                let displayIndices = new Set(mandatoryLines);
+                
+                // הוסף שורות נוספות מההתחלה עד למגבלה
+                let addedCount = 0;
+                for (let i = 0; i < footerLines.length && addedCount < additionalLines; i++) {
+                    if (!displayIndices.has(i)) {
+                        displayIndices.add(i);
+                        addedCount++;
+                    }
+                }
+                
+                // מיין את האינדקסים
+                displayIndices = [...displayIndices].sort((a, b) => a - b);
+                
+                // בנה את הטקסט להצגה עם סימן "..." במקומות המתאימים
+                let resultLines = [];
+                let lastIndex = -1;
+                
+                displayIndices.forEach(index => {
+                    // הוסף "..." אם יש פער של יותר משורה אחת
+                    if (index > lastIndex + 1 && lastIndex !== -1) {
+                        resultLines.push('...');
+                    }
+                    
+                    // טיפול מיוחד בשורות בולטות: הוסף תגיות <strong> אם יש ** בטקסט
+                    let line = footerLines[index];
+                    if (line.includes('**')) {
+                        line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    }
+                    
+                    // הוסף את השורה לתוצאה
+                    resultLines.push(line);
+                    lastIndex = index;
                 });
-                imagesHtml += '</div>';
+                
+                // הוסף "..." בסוף אם לא הצגנו את כל השורות
+                if (lastIndex < footerLines.length - 1) {
+                    resultLines.push('...');
+                }
+                
+                // התאם את גודל הגופן לפי כמות התמונות והטקסט
+                let footerFontSize = uploadedImages.length > 2 ? '0.7em' : '0.75em';
+                
+                // חבר את השורות לטקסט אחד
+                footerHtml = `<span style="font-size: ${footerFontSize};">${resultLines.join('<br>')}</span>`;
             }
             
             const previewHtml = `
-                <div style="font-family: Arial, sans-serif; line-height: 1.6; font-size: 0.9em;">
+                <div style="font-family: Arial, sans-serif; line-height: 1.25; max-width: 100%; font-size: 0.85em; padding: 0;">
                     ${logoHtml}
-                    <p><strong>${title}</strong></p>
-                    <p><strong>${subtitle}</strong></p>
+                    <p style="font-size: 1em; margin: 3px 0;"><strong>${title}</strong></p>
+                    <p style="font-size: 0.95em; margin: 3px 0;"><strong>${subtitle}</strong></p>
                     ${itemsHtml}
                     ${imagesHtml}
-                    <p>כל הקודם זוכה</p>
-                    <p>מיקום האיסוף: ${location}.</p>
-                    <p>לפרטים:</p>
-                    <p>פלאפון: <strong>${phone}</strong></p>
-                    <p>מייל: <strong>${email}</strong></p>
+                    <p style="margin: 3px 0;">כל הקודם זוכה</p>
+                    <p style="margin: 3px 0;">מיקום האיסוף: ${location}.</p>
+                    <p style="margin: 3px 0;">לפרטים:</p>
+                    <p style="margin: 3px 0;">פלאפון: <strong>${phone}</strong></p>
+                    <p style="margin: 3px 0;">מייל: <strong>${email}</strong></p>
+                    <p style="font-size: 0.75em; margin-top: 3px;">${footerHtml}</p>
                 </div>
             `;
             
@@ -761,42 +879,161 @@
             
             let logoHtml = '';
             if (logoImage) {
-                logoHtml = `<div style="text-align: center; margin-bottom: 15px;">
-                    <img src="${logoImage}" style="max-width: 300px; max-height: 150px;">
+                logoHtml = `<div style="text-align: center; margin-bottom: 8px;">
+                    <img src="${logoImage}" style="max-width: 200px; max-height: 80px;">
                 </div>`;
             }
             
             let itemsHtml = '';
             if (items.length > 0) {
-                itemsHtml = '<ul style="list-style-type: disc;">';
+                itemsHtml = '<ul style="list-style-type: disc; margin: 6px 0; padding-right: 16px; padding-left: 16px;">';
                 items.forEach(item => {
                     itemsHtml += `<li><strong>${item}</strong></li>`;
                 });
                 itemsHtml += '</ul>';
             }
             
+            // הקטן את כמות התמונות לפי הכמות
             let imagesHtml = '';
             if (uploadedImages.length > 0) {
-                imagesHtml = '<p><strong>מצ"ב תמונות</strong></p><div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">';
-                uploadedImages.forEach(img => {
-                    imagesHtml += `<img src="${img.dataUrl || img}" style="max-width: 450px; max-height: 450px; border-radius: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.3);">`;
+                imagesHtml = '<p style="margin: 3px 0 2px 0;"><strong>מצ"ב תמונות</strong></p>';
+                
+                if (uploadedImages.length === 1) {
+                    // תמונה אחת - הגדל משמעותית
+                    const maxHeight = footerText.length > 100 ? 520 : 580;
+                    imagesHtml += `<div style="text-align: center; margin-bottom: 5px;">
+                        <img src="${uploadedImages[0].dataUrl || uploadedImages[0]}" style="max-width: 650px; max-height: ${maxHeight}px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
+                    </div>`;
+                } else if (uploadedImages.length === 2) {
+                    // שתי תמונות - הגדל משמעותית
+                    const maxHeight = footerText.length > 100 ? 380 : 420;
+                    imagesHtml += '<div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 5px;">';
+                    uploadedImages.forEach(img => {
+                        imagesHtml += `<img src="${img.dataUrl || img}" style="max-width: 400px; max-height: ${maxHeight}px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">`;
+                    });
+                    imagesHtml += '</div>';
+                } else if (uploadedImages.length <= 3) {
+                    // 3 תמונות - הגדל משמעותית
+                    const maxHeight = footerText.length > 100 ? 300 : 350;
+                    imagesHtml += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-bottom: 5px;">';
+                    uploadedImages.forEach(img => {
+                        imagesHtml += `<div style="text-align: center;">
+                            <img src="${img.dataUrl || img}" style="max-width: 100%; max-height: ${maxHeight}px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
+                        </div>`;
+                    });
+                    imagesHtml += '</div>';
+                } else {
+                    // מעל 3 תמונות - הגבל לכמות קטנה יותר אבל בגודל משמעותי
+                    const maxHeight = footerText.length > 100 ? 220 : 250;
+                    imagesHtml += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; margin-bottom: 4px;">';
+                    // הגבל ל-6 תמונות בלבד
+                    const maxImagesToShow = Math.min(uploadedImages.length, 6);
+                    for (let i = 0; i < maxImagesToShow; i++) {
+                        const img = uploadedImages[i];
+                        imagesHtml += `<div style="text-align: center;">
+                            <img src="${img.dataUrl || img}" style="max-width: 100%; max-height: ${maxHeight}px; border-radius: 3px; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+                        </div>`;
+                    }
+                    imagesHtml += '</div>';
+                    
+                    // אם יש יותר תמונות, הודע למשתמש
+                    if (uploadedImages.length > 6) {
+                        imagesHtml += `<p style="text-align: center; font-size: 0.75em; margin: 2px 0;">+ ${uploadedImages.length - 6} תמונות נוספות</p>`;
+                    }
+                }
+            }
+            
+            // טקסט הפוטר - וודא שטקסט "בברכה" מופיע תמיד
+            let footerHtml = '';
+            if (footerText) {
+                // חילוק הטקסט לשורות
+                const footerLines = footerText.split('\n').filter(line => line.trim());
+                
+                // אתר את השורות החשובות
+                const bruchaIndex = footerLines.findIndex(line => line.includes('ברכה'));
+                const unsubscribeIndex = footerLines.findIndex(line => line.includes('לבטל את הרישום') || line.includes('unsubscribe'));
+                
+                // הגדר שורות חובה להצגה בהתאם למספר התמונות
+                let mandatoryLines = [];
+                
+                // הוסף את שורות הברכה תמיד (2-3 שורות)
+                if (bruchaIndex !== -1) {
+                    for (let i = bruchaIndex; i < bruchaIndex + 3 && i < footerLines.length; i++) {
+                        mandatoryLines.push(i);
+                    }
+                }
+                
+                // הוסף את שורת הסרת הרישום אם קיימת והמשתמש ביקש
+                if (unsubscribeIndex !== -1 && document.getElementById('includeUnsubscribe').checked) {
+                    mandatoryLines.push(unsubscribeIndex);
+                }
+                
+                // החלט על מספר השורות הנוספות להצגה
+                let additionalLines = uploadedImages.length > 3 ? 0 :
+                                      uploadedImages.length > 1 ? 1 : 
+                                      uploadedImages.length === 1 ? 2 : 4;
+                
+                // צור את רשימת כל האינדקסים להצגה
+                let displayIndices = new Set(mandatoryLines);
+                
+                // הוסף שורות נוספות מההתחלה עד למגבלה
+                let addedCount = 0;
+                for (let i = 0; i < footerLines.length && addedCount < additionalLines; i++) {
+                    if (!displayIndices.has(i)) {
+                        displayIndices.add(i);
+                        addedCount++;
+                    }
+                }
+                
+                // מיין את האינדקסים
+                displayIndices = [...displayIndices].sort((a, b) => a - b);
+                
+                // בנה את הטקסט להצגה עם סימן "..." במקומות המתאימים
+                let resultLines = [];
+                let lastIndex = -1;
+                
+                displayIndices.forEach(index => {
+                    // הוסף "..." אם יש פער של יותר משורה אחת
+                    if (index > lastIndex + 1 && lastIndex !== -1) {
+                        resultLines.push('...');
+                    }
+                    
+                    // טיפול מיוחד בשורות בולטות: הוסף תגיות <strong> אם יש ** בטקסט
+                    let line = footerLines[index];
+                    if (line.includes('**')) {
+                        line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    }
+                    
+                    // הוסף את השורה לתוצאה
+                    resultLines.push(line);
+                    lastIndex = index;
                 });
-                imagesHtml += '</div>';
+                
+                // הוסף "..." בסוף אם לא הצגנו את כל השורות
+                if (lastIndex < footerLines.length - 1) {
+                    resultLines.push('...');
+                }
+                
+                // התאם את גודל הגופן לפי כמות התמונות והטקסט
+                let footerFontSize = uploadedImages.length > 2 ? '0.7em' : '0.75em';
+                
+                // חבר את השורות לטקסט אחד
+                footerHtml = `<span style="font-size: ${footerFontSize};">${resultLines.join('<br>')}</span>`;
             }
             
             const previewHtml = `
-                <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+                <div style="font-family: Arial, sans-serif; line-height: 1.25; max-width: 100%; font-size: 0.85em; padding: 0;">
                     ${logoHtml}
-                    <p><strong>${title}</strong></p>
-                    <p><strong>${subtitle}</strong></p>
+                    <p style="font-size: 1em; margin: 3px 0;"><strong>${title}</strong></p>
+                    <p style="font-size: 0.95em; margin: 3px 0;"><strong>${subtitle}</strong></p>
                     ${itemsHtml}
                     ${imagesHtml}
-                    <p>כל הקודם זוכה</p>
-                    <p>מיקום האיסוף: ${location}.</p>
-                    <p>לפרטים:</p>
-                    <p>פלאפון: <strong>${phone}</strong></p>
-                    <p>מייל: <strong>${email}</strong></p>
-                    <p>${footerText.replace(/\n/g, '<br>')}</p>
+                    <p style="margin: 3px 0;">כל הקודם זוכה</p>
+                    <p style="margin: 3px 0;">מיקום האיסוף: ${location}.</p>
+                    <p style="margin: 3px 0;">לפרטים:</p>
+                    <p style="margin: 3px 0;">פלאפון: <strong>${phone}</strong></p>
+                    <p style="margin: 3px 0;">מייל: <strong>${email}</strong></p>
+                    <p style="font-size: 0.75em; margin-top: 3px;">${footerHtml}</p>
                 </div>
             `;
             
@@ -806,19 +1043,73 @@
         // יצירת PDF
         function generatePDF() {
             const element = document.getElementById('messagePreview');
+            
+            // הגדרות PDF מיוחדות לדף A4 אחד
             const opt = {
-                margin: 10,
+                margin: [5, 5, 5, 5], // עליון, שמאל, תחתון, ימין - הקטנת השוליים עוד יותר
                 filename: 'למסירה.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                image: { type: 'jpeg', quality: 0.92 },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    letterRendering: true
+                },
+                jsPDF: { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'portrait',
+                    compress: true,
+                    hotfixes: ["px_scaling"]
+                },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
             
+            // הצג הודעת טעינה
+            const loadingMessage = document.createElement('div');
+            loadingMessage.className = 'alert alert-info text-center';
+            loadingMessage.innerHTML = '<i class="bi bi-hourglass-split"></i> יוצר PDF, אנא המתן...';
+            element.parentNode.insertBefore(loadingMessage, element.nextSibling);
+            
+            // לפני יצירת ה-PDF, בדוק שאין חריגות גובה
+            const originalHTML = element.innerHTML;
+            
+            // זמנית הוסף סגנון עם מגבלות של דף A4
+            const tempStyle = document.createElement('style');
+            tempStyle.textContent = `
+                #messagePreview {
+                    max-height: 280mm; /* A4 height minus margins */
+                    overflow: hidden;
+                    box-sizing: border-box;
+                    page-break-inside: avoid;
+                }
+                #messagePreview * {
+                    page-break-inside: avoid;
+                }
+            `;
+            document.head.appendChild(tempStyle);
+            
+            // ייצור ה-PDF
             html2pdf().from(element).set(opt).outputPdf('blob').then(function(pdf) {
+                // החזר את ה-HTML המקורי
+                document.head.removeChild(tempStyle);
+                element.innerHTML = originalHTML;
+                
                 pdfBlob = pdf;
                 const pdfUrl = URL.createObjectURL(pdf);
                 document.getElementById('pdfPreview').src = pdfUrl;
                 document.getElementById('pdf-tab').click();
+                
+                // הסרת הודעת הטעינה
+                loadingMessage.remove();
+            }).catch(function(error) {
+                // במקרה של שגיאה, החזר את ה-HTML המקורי
+                document.head.removeChild(tempStyle);
+                element.innerHTML = originalHTML;
+                
+                console.error('שגיאה ביצירת PDF:', error);
+                alert('אירעה שגיאה ביצירת קובץ ה-PDF. אנא נסה שוב או הקטן את מספר התמונות/אורך הטקסט.');
+                loadingMessage.remove();
             });
         }
 
